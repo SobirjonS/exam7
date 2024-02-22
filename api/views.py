@@ -4,7 +4,7 @@ from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from rest_framework.status import HTTP_400_BAD_REQUEST, HTTP_200_OK
 
-from datetime import date
+from datetime import datetime
 
 from main import models
 from . import serializer
@@ -43,8 +43,24 @@ def attendance_create(request, id):
 
 @api_view(['GET'])
 def attendance_day(request):
-    attendance = models.Attendance.objects.filter(date_time__day = date.today())
-    ser = serializer.AttendanceSerializers(attendance)
+    attendance = models.Attendance.objects.filter(attendance_date__day=datetime.now().day)
+    ser = serializer.AttendanceSerializers(attendance, many=True)
+    return Response(ser.data)
+
+
+@api_view(['GET'])
+def attendance_week(request):
+    date = datetime.today()
+    week = date.strftime("%V")
+    attendance = models.Attendance.objects.filter(attendance_date__week=week)
+    ser = serializer.AttendanceSerializers(attendance, many=True)
+    return Response(ser.data)
+
+
+@api_view(['GET'])
+def attendance_month(request):
+    attendance = models.Attendance.objects.filter(attendance_date__month=datetime.now().month)
+    ser = serializer.AttendanceSerializers(attendance, many=True)
     return Response(ser.data)
 
 

@@ -12,7 +12,7 @@ class Employee(models.Model):
     
 class Attendance(models.Model):
     come = models.BooleanField(default=False)
-    date_time = models.DateField(auto_now_add=True)
+    attendance_date = models.DateField(auto_now_add=True)
     employee = models.ForeignKey(Employee, on_delete=models.CASCADE)
     
     def __str__(self):
